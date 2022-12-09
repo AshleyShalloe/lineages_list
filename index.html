@@ -1,27 +1,46 @@
 
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="description" content="SARS-CoV-2 lineage list - with filtering and unaliased names" />
+    <title>Lineage List</title>
+    <link rel="icon" href="favicon.svg" />
     
 <style>
     html{
         font-family: sans-serif;
         margin: 0 auto;
+        background: #e6e7e8
     }
     body{
         display: flex;
         flex-direction: column;
         align-items: center;
     }
+    h2{
+        background: #a50062;
+        color: white;
+        text-shadow: 2px 2px 4px #3e3e3e;
+        width: 95%;
+        text-align: center;
+        border-radius: 0.5em;
+        padding: 0.4em;
+    }
     .dataframe{
         border-collapse: collapse;
         width: 95%;
         border: none;
         table-layout: fixed;
-        box-shadow: 0px 0px 20px grey;
+        box-shadow: 0px 0px 20px gray;
+        border-radius: 0.5em;
     }
     .dataframe tr{
         border-top: 1px solid lightgray;
         border-bottom: 1px solid lightgray;
+    }
+    .dataframe tr:first-of-type{
+        border-top: none;
     }
     .dataframe td, .dataframe th{
         padding: 0.4em;
@@ -31,33 +50,41 @@
     .dataframe th{
         text-align: center;
         color: white;
+        text-shadow: 2px 2px 4px #3e3e3e;
     }
     .dataframe th:nth-of-type(1){
-        background: #8994b6;
+        background: #d62900;
+        border-top-left-radius: 0.5em;
     }
     .dataframe th:nth-of-type(2){
-        background: #7c9e7a;
+        background: #ef7622;
     }
     .dataframe th:nth-of-type(3){
-        background: #b78a8d;
+        background: #ff9b56;
     }
     .dataframe th:nth-of-type(4){
-        background: #9f9472;
+        background: #ffaf56;
     }
     .dataframe th:nth-of-type(5){
-        background: #719e9b;
+        background: #d2627d;
     }
     .dataframe th:nth-of-type(6){
-        background: #ac8aaf;
+        background: #d262a6;
     }
     .dataframe th:nth-of-type(7){
-        background: #454a5b;
+        background: #b65692;
     }
     .dataframe th:nth-of-type(8){
-        background: #909097;
+        background: #a50062;
+    }
+    .dataframe th:last-of-type{
+        border-top-right-radius: 0.5em;
     }
     .dataframe tr:nth-of-type(even){
         background: #efecec;
+    }
+    .dataframe tr:nth-of-type(odd){
+        background: white;
     }
     .dataframe td:nth-of-type(3), .dataframe td:nth-of-type(8){
         font-size: smaller;
@@ -72,8 +99,7 @@
         font-style: italic;
     }
     #filter_container{
-        background: lightgray;
-        border: 1px solid grey;
+        background: white;
         border-radius: 0.5em;
         padding: 1em;
         margin-bottom: 1em;
@@ -81,9 +107,11 @@
         grid-column-start: 1;
         grid-column-end: 2;
         grid-row-start: 1;
-        grid-row-end: 2;
+        grid-row-end: 3;
         justify-content: space-around;
         min-width: 500px;
+        grid-row-gap: 0.3em;
+        box-shadow: 5px 5px 5px lightgrey;
     }
     #filter_container h3{
         padding: 0;
@@ -91,24 +119,75 @@
         margin-bottom: 0.5em;
     }
     #return_rows{
-        border: 1px solid grey;
         border-radius: 0.5em;
         padding: 1em;
         margin-bottom: 1em;
         min-width: 500px;
+        background: white;
+        box-shadow: 5px 5px 5px lightgrey;
+        text-align: center;
+    }
+    #introdiv{
+        background: #e5ebff;
+        box-shadow: 5px 5px 5px lightgrey;
+        border-radius: 0.5em;
+        max-width: 700px;
+        padding: 1em;
+        line-height: 1.4em;
+    }
+    .skeuButton{
+        background: white;
+        color: black;
+        box-shadow: 2px 2px 4px #80808080, -2px -2px 4px #ffffff6b;
+        border-radius: 0.4em;
+        border: 1px solid rgb(237, 237, 237);
+        transition: border 0.5s;
+        cursor: pointer;
+        user-select: none;
+        padding: 5px;
+      }
+    .skeuButton:active{
+        color: darkblue;
+        box-shadow: inset 2px 2px 4px #80808080, inset -2px -2px 4px #ffffff6b;
+    }
+    .skeuButton:hover{
+        border: 1px solid rgb(217, 217, 217);
+    }
+    .fancyLink{
+        background: #01107c;
+        border-radius: 1em;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        color: white !important;
+        text-decoration: none !important;
+        white-space: nowrap;
+    }
+    .fancyLink:hover{
+        background: #061ed4;
     }
 </style>
 
 </head>
 <body>
+<div id="introdiv">
+    A list of SARS-CoV-2 lineages, heavily inspired by <a class="fancyLink" href="https://cov-lineages.org/lineage_list.html" target="_blank">cov-lineages.org</a> and 
+    utilising data from the <a class="fancyLink" href="https://github.com/cov-lineages/pango-designation" target="_blank">cov-lineages/pango-designation</a> 
+    and <a class="fancyLink" href="https://github.com/cov-lineages/lineages-website/blob/master/_data/lineage_data.full.json" target="_blank">cov-lineages/lineages-website</a> GitHub repositories.
+</div>
 <h2>Lineages list</h2>
     <div id="filter_container">
-        <h3>Filter: latest date</h3>
-        <div style="grid-column-start: 1">
+        <h3 style="grid-column-start: 1; grid-row-start: 1; grid-column-end: 3">Filter: latest date</h3>
+        <div style="grid-column-start: 1; grid-row-start: 2">
             From <input type="date" id="start_date" onchange="do_filter()">
         </div>
-        <div style="grid-column-start: 2">
+        <div style="grid-column-start: 2; grid-row-start: 2">
             Until <input type="date" id="end_date" onchange="do_filter()">
+        </div>
+        <div style="grid-column-start: 1; grid-column-end: 3; grid-row-start: 3; display: grid; grid-row-gap: 0.3em;">
+            <button class="skeuButton" type="button" onclick="quick_filter_date('last_30')">Last 30 days</button>
+            <button class="skeuButton" type="button" onclick="quick_filter_date('last_60')">Last 60 days</button>
+            <button class="skeuButton" type="button" onclick="quick_filter_date('this_year')">This year</button>
+            <button class="skeuButton" type="button" onclick="quick_filter_date('all_time')">All time</button>
         </div>
     </div>
     <div id="return_rows">
@@ -24672,6 +24751,43 @@ function get_earliest_latest_date(){
     var dates = get_dates_array();
     dates.sort((a,b)=>a.getTime()-b.getTime()); // magic date-y sort-y function
     return {"earliest": dates.at(0), "latest": dates.at(-1)}
+}
+
+function quick_filter_date(quick_filter){
+    var filter_date = new Date()
+    if (quick_filter == "last_30"){
+        document.getElementById("end_date").value = datetime_to_yyyy_mm_dd(filter_date)
+        filter_date.setDate(filter_date.getDate()-30)
+        filter_date = datetime_to_yyyy_mm_dd(filter_date)
+        document.getElementById("start_date").value = filter_date
+        do_filter();
+        return
+    }
+    else if (quick_filter == "last_60"){
+        document.getElementById("end_date").value = datetime_to_yyyy_mm_dd(filter_date)
+        filter_date.setDate(filter_date.getDate()-60)
+        filter_date = datetime_to_yyyy_mm_dd(filter_date)
+        document.getElementById("start_date").value = filter_date
+        do_filter();
+        return
+    }
+    else if (quick_filter == "this_year"){
+        document.getElementById("end_date").value = datetime_to_yyyy_mm_dd(filter_date)
+        filter_date = `${filter_date.getFullYear()}-01-01`
+        document.getElementById("start_date").value = filter_date
+        do_filter();
+        return
+    }
+    else if (quick_filter == "all_time"){
+        var earliest_latest_dict = get_earliest_latest_date()
+        document.getElementById("start_date").value = datetime_to_yyyy_mm_dd(earliest_latest_dict["earliest"])
+        document.getElementById("end_date").value = datetime_to_yyyy_mm_dd(earliest_latest_dict["latest"])
+        do_filter();
+        return
+    }
+    else{
+        return console.error("invalid quick filter")
+    }
 }
 
 function init_date_filter_input_values(){

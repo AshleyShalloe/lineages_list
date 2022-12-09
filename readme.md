@@ -14,8 +14,6 @@ Major differences are:
 
 That, and the fact it isn't updated automatically.
 
-The filter feature is really rather slow and makes the page unresponsive while it is filtering. This is fixable.
-
 ## Usage
 
 Run the Jupyter notebook and in theory you'll get an `index.html` file out the other end.

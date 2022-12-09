@@ -1,6 +1,11 @@
 
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="description" content="SARS-CoV-2 lineage list - with filtering and unaliased names" />
+    <title>Lineage List</title>
+    <link rel="icon" href="favicon.svg" />
     
 <style>
     html{
@@ -81,9 +86,10 @@
         grid-column-start: 1;
         grid-column-end: 2;
         grid-row-start: 1;
-        grid-row-end: 2;
+        grid-row-end: 3;
         justify-content: space-around;
         min-width: 500px;
+        grid-row-gap: 0.3em;
     }
     #filter_container h3{
         padding: 0;
@@ -97,18 +103,37 @@
         margin-bottom: 1em;
         min-width: 500px;
     }
+    #introdiv{
+        background: #e5ebff;
+        border: 1px solid black;
+        border-radius: 0.5em;
+        max-width: 700px;
+        padding: 1em;
+        white-space: nowrap;
+    }
 </style>
 
 </head>
 <body>
+<div id="introdiv">
+    A list of SARS-CoV-2 lineages, heavily inspired by <a href="https://cov-lineages.org/lineage_list.html" target="_blank">cov-lineages.org</a> and 
+    utilising data from the <a href="https://github.com/cov-lineages/pango-designation" target="_blank">cov-lineages/pango-designation</a> 
+    and <a href="https://github.com/cov-lineages/lineages-website/blob/master/_data/lineage_data.full.json" target="_blank">cov-lineages/lineages-website</a> GitHub repositories.
+</div>
 <h2>Lineages list</h2>
     <div id="filter_container">
-        <h3>Filter: latest date</h3>
-        <div style="grid-column-start: 1">
+        <h3 style="grid-column-start: 1; grid-row-start: 1; grid-column-end: 3">Filter: latest date</h3>
+        <div style="grid-column-start: 1; grid-row-start: 2">
             From <input type="date" id="start_date" onchange="do_filter()">
         </div>
-        <div style="grid-column-start: 2">
+        <div style="grid-column-start: 2; grid-row-start: 2">
             Until <input type="date" id="end_date" onchange="do_filter()">
+        </div>
+        <div style="grid-column-start: 1; grid-column-end: 3; grid-row-start: 3; display: grid; grid-row-gap: 0.3em;">
+            <button type="button" onclick="quick_filter_date('last_30')">Last 30 days</button>
+            <button type="button" onclick="quick_filter_date('last_60')">Last 60 days</button>
+            <button type="button" onclick="quick_filter_date('this_year')">This year</button>
+            <button type="button" onclick="quick_filter_date('all_time')">All time</button>
         </div>
     </div>
     <div id="return_rows">
@@ -24672,6 +24697,43 @@ function get_earliest_latest_date(){
     var dates = get_dates_array();
     dates.sort((a,b)=>a.getTime()-b.getTime()); // magic date-y sort-y function
     return {"earliest": dates.at(0), "latest": dates.at(-1)}
+}
+
+function quick_filter_date(quick_filter){
+    var filter_date = new Date()
+    if (quick_filter == "last_30"){
+        document.getElementById("end_date").value = datetime_to_yyyy_mm_dd(filter_date)
+        filter_date.setDate(filter_date.getDate()-30)
+        filter_date = datetime_to_yyyy_mm_dd(filter_date)
+        document.getElementById("start_date").value = filter_date
+        do_filter();
+        return
+    }
+    else if (quick_filter == "last_60"){
+        document.getElementById("end_date").value = datetime_to_yyyy_mm_dd(filter_date)
+        filter_date.setDate(filter_date.getDate()-60)
+        filter_date = datetime_to_yyyy_mm_dd(filter_date)
+        document.getElementById("start_date").value = filter_date
+        do_filter();
+        return
+    }
+    else if (quick_filter == "this_year"){
+        document.getElementById("end_date").value = datetime_to_yyyy_mm_dd(filter_date)
+        filter_date = `${filter_date.getFullYear()}-01-01`
+        document.getElementById("start_date").value = filter_date
+        do_filter();
+        return
+    }
+    else if (quick_filter == "all_time"){
+        var earliest_latest_dict = get_earliest_latest_date()
+        document.getElementById("start_date").value = datetime_to_yyyy_mm_dd(earliest_latest_dict["earliest"])
+        document.getElementById("end_date").value = datetime_to_yyyy_mm_dd(earliest_latest_dict["latest"])
+        do_filter();
+        return
+    }
+    else{
+        return console.error("invalid quick filter")
+    }
 }
 
 function init_date_filter_input_values(){

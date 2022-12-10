@@ -6,6 +6,7 @@
     <meta name="description" content="SARS-CoV-2 lineage list - with filtering and unaliased names" />
     <title>Lineage List</title>
     <link rel="icon" href="favicon.svg" />
+    <script src="res/sorttable.js" note="I'm allowed one external library okay. This one is really good"></script>
     
 <style>
     html{
@@ -24907,12 +24908,19 @@ function init_date_filter_input_values(){
     document.getElementById("end_date").max = end_date
 }
 
+function add_sortable_tag_to_dataframes(){
+    for (var i=0; i<document.getElementsByClassName("dataframe").length; i++){
+        document.getElementsByClassName("dataframe")[i].classList.add("sortable")
+    }
+}
+
 function init(){
     init_date_filter_input_values();
     update_row_count();
     toggle_hideme_css(); // initialise by adding the css
     toggle_hideme_css_search();
     init_oberve_header_stickiness_all_dataframes(); // makes the table header square if it is sticky
+    add_sortable_tag_to_dataframes();
 }
 
 init();

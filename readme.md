@@ -2,15 +2,18 @@
 
 ## Intro
 
+It's here: [https://ashleyshalloe.github.io/lineages_list/](https://ashleyshalloe.github.io/lineages_list/)!
+
 It's basically [https://cov-lineages.org/lineage_list.html](https://cov-lineages.org/lineage_list.html) but slightly worse.
 
 Major differences are:
 
-* inclusion of an unaliased lineage name column
-* not bothering at all with the graphs
-* moving the withdrawn lineages to a separate table
-* date filter function
+* an unaliased lineage name column has been included
+* no graphs
+* withdrawn lineages have been moved to a separate table
+* filter by date function has been added
 * all lineages are included
+* click table headers to sort
 
 That, and the fact it isn't updated automatically.
 

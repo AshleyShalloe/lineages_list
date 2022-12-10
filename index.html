@@ -51,6 +51,12 @@
         text-align: center;
         color: white;
         text-shadow: 2px 2px 4px #3e3e3e;
+        position: sticky;
+        top: -1px;
+    }
+    .dataframe th.is-pinned{
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
     }
     .dataframe th:nth-of-type(1){
         background: #d62900;
@@ -80,10 +86,10 @@
     .dataframe th:last-of-type{
         border-top-right-radius: 0.5em;
     }
-    .dataframe tr:nth-of-type(even){
+    .dataframe tbody tr:nth-of-type(even){
         background: #efecec;
     }
-    .dataframe tr:nth-of-type(odd){
+    .dataframe tbody tr:nth-of-type(odd){
         background: white;
     }
     .dataframe td:nth-of-type(3), .dataframe td:nth-of-type(8){
@@ -24863,6 +24869,29 @@ function filter_by_lineage(input_lineage){
                 document.getElementsByClassName("dataframe")[0].rows[i].classList.remove("hideme_css_search")
             }
         }
+        else{
+             document.getElementsByClassName("dataframe")[0].rows[i].classList.add("hideme_css_search")
+        }
+    }
+}
+
+function init_observe_header_stickiness(tableElement){
+    // https://css-tricks.com/how-to-detect-when-a-sticky-element-gets-pinned/
+    // brilliant stuff
+    for (var i=0; i<tableElement.getElementsByTagName("th").length; i++){
+        const el = tableElement.getElementsByTagName("th")[i]
+        const observer = new IntersectionObserver( 
+        ([e]) => e.target.classList.toggle("is-pinned", e.intersectionRatio < 1),
+        { threshold: [1] }
+        );
+
+        observer.observe(el);
+    }
+}
+
+function init_oberve_header_stickiness_all_dataframes(){
+    for (var i=0; i<document.getElementsByClassName("dataframe").length; i++){
+        init_observe_header_stickiness(document.getElementsByClassName("dataframe")[i])
     }
 }
 
@@ -24886,6 +24915,7 @@ function init(){
     update_row_count();
     toggle_hideme_css(); // initialise by adding the css
     toggle_hideme_css_search();
+    init_oberve_header_stickiness_all_dataframes(); // makes the table header square if it is sticky
 }
 
 init();

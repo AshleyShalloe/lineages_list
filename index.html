@@ -24914,6 +24914,22 @@ function add_sortable_tag_to_dataframes(){
     }
 }
 
+function dataframe_0_counts_to_locale(){
+    // formats the number designated and assigned columns to the users locale format
+    // e.g. 1000 => 1,000
+    var tempframe = document.getElementsByClassName("dataframe")[0]
+
+    var num_design = Array.prototype.map.call(tempframe.rows, x => parseInt(x.cells[5].innerText).toLocaleString())
+    var num_assign = Array.prototype.map.call(tempframe.rows, x => parseInt(x.cells[6].innerText).toLocaleString())
+        
+    for (var i=1; i<tempframe.rows.length; i++){
+        tempframe.rows[i].cells[5].innerText = num_design[i];
+        tempframe.rows[i].cells[6].innerText = num_assign[i];
+    }
+
+    document.getElementsByClassName("dataframe")[0].outerHTML = tempframe.outerHTML
+}
+
 function init(){
     init_date_filter_input_values();
     update_row_count();
@@ -24921,6 +24937,7 @@ function init(){
     toggle_hideme_css_search();
     init_oberve_header_stickiness_all_dataframes(); // makes the table header square if it is sticky
     add_sortable_tag_to_dataframes();
+    dataframe_0_counts_to_locale(); // hope this runs before the user interacts with the table
 }
 
 init();
